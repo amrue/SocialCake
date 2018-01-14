@@ -24,14 +24,17 @@ const Content = styled(Card)`
 `;
 
 // create a STOMP client over that websocket connection
-var stompClient = stomp.client('ws://localhost:7778/w/messages/websocket');
+var stompClient = stomp.client('ws://104.128.226.60:7778/w/messages/websocket');
 // Define the callback function that we want to execute after connection.
 // Here we subscribe to new block notifications
 var callback = function(frame) {
-  stompClient.subscribe('/blocks/new', function(data) {
-    var blockHeight = JSON.parse(data.body);
-    console.log(blockHeight);
-  });
+  stompClient.subscribe(
+    '/unconfirmed/TDJOEZOVQOOLUQTGVT5ST43SIGC35OE6JA7GKIT5',
+    function(data) {
+      var body = JSON.parse(data.body);
+      console.log(JSON.stringify(body.transaction, null, 4));
+    },
+  );
 };
 
 // Connect and subscribe
