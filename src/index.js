@@ -17,12 +17,12 @@ import routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyAsuqpqt29-TIwBAu01Nbt5QnC3FIKO4A4',
-  authDomain: 'react-firebase-graphql.firebaseapp.com',
-  databaseURL: 'https://react-firebase-graphql.firebaseio.com',
-  projectId: 'react-firebase-graphql',
-  storageBucket: 'react-firebase-graphql.appspot.com',
-  messagingSenderId: '564620986275',
+  apiKey: 'YOUR API KEY',
+  authDomain: 'APP DOMAIN',
+  databaseURL: 'APP DATABASE URL',
+  projectId: 'PROJECT ID IN FIREBASE',
+  storageBucket: '',
+  messagingSenderId: 'SOME ID',
 });
 
 const render = props =>
