@@ -25,10 +25,15 @@ const defaultState = {
 };
 
 class LoginDialog extends React.Component {
-  state = { ...defaultState };
+  state = {
+    ...defaultState,
+  };
 
-  signInWithFacebook = event => {
-    this.setState({ ...defaultState, loading: true });
+  signInWithGoogle = event => {
+    this.setState({
+      ...defaultState,
+      loading: true,
+    });
     auth
       .signIn()
       .then(() => {
@@ -37,7 +42,10 @@ class LoginDialog extends React.Component {
       })
       .catch(err => {
         console.log(err);
-        this.setState({ ...defaultState, error: err.messsage });
+        this.setState({
+          ...defaultState,
+          error: err.messsage,
+        });
       });
   };
 
@@ -47,12 +55,12 @@ class LoginDialog extends React.Component {
         <Title>Sign In</Title>
         <DialogContent>
           <Button
-            raised
+            raised="raised"
             color="primary"
             disabled={this.state.loading}
-            onClick={this.signInWithFacebook}
+            onClick={this.signInWithGoogle}
           >
-            Sign in with Facebook
+            Sign in with Google
           </Button>
         </DialogContent>
       </Dialog>

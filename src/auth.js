@@ -13,7 +13,8 @@ const callbacks = new Set();
 
 export default {
   signIn() {
-    const provider = new firebase.auth.FacebookAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().useDeviceLanguage(); // for localization
     return firebase.auth().signInWithPopup(provider);
   },
 

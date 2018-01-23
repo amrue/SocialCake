@@ -10,6 +10,9 @@ import React from 'react';
 import styled from 'styled-components';
 import Card from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import * as MosaicService from '../../nem/MosaicService.ts';
+import * as _ from 'lodash';
+import { Mosaic } from 'nem-library';
 
 const Container = styled.div`
   max-width: 600px;

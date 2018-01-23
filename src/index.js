@@ -17,12 +17,12 @@ import routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
 
 firebase.initializeApp({
-  apiKey: 'YOUR API KEY',
-  authDomain: 'APP DOMAIN',
-  databaseURL: 'APP DATABASE URL',
-  projectId: 'PROJECT ID IN FIREBASE',
-  storageBucket: '',
-  messagingSenderId: 'SOME ID',
+  apiKey: '',
+  authDomain: 'socialcake-nem-hackathon.firebaseapp.com',
+  databaseURL: 'https://socialcake-nem-hackathon.firebaseio.com',
+  projectId: 'socialcake-nem-hackathon',
+  storageBucket: 'socialcake-nem-hackathon.appspot.com',
+  messagingSenderId: '',
 });
 
 const render = props =>
