@@ -15,6 +15,7 @@ import auth from './auth';
 import history from './history';
 import routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
+import { NEMLibrary, NetworkTypes } from 'nem-library';
 
 firebase.initializeApp({
   apiKey: '',
@@ -24,6 +25,8 @@ firebase.initializeApp({
   storageBucket: 'socialcake-nem-hackathon.appspot.com',
   messagingSenderId: '',
 });
+
+NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
 
 const render = props =>
   new Promise((resolve, reject) => {

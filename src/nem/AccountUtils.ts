@@ -1,22 +1,19 @@
 import { Address, Account, PublicAccount } from "nem-library";
 
-const userPrivateKey: string = process.env.USER_PRIVATE_KEY;
-const orgPrivateKey: string = process.env.ORG_PRIVATE_KEY;
+const userPrivateKey: string = ''; // hardcode in a private key for now
 
-let accounts:{ [index:string] : Account} = {};
-accounts['org'] = Account.createWithPrivateKey(orgPrivateKey);
-accounts['user'] = Account.createWithPrivateKey(userPrivateKey);
+let account: Account = Account.createWithPrivateKey(userPrivateKey);
 
-const getAddress = (type : string) => {
-  return accounts[type].address;
+const getAddress = () => {
+  return account.address;
 }
 
-const getAccount = (type: string) => {
-  return accounts[type];
+const getAccount = () => {
+  return account;
 }
 
-const getPublicAccount = (type: string) => {
-  return PublicAccount.createWithPublicKey(accounts[type].publicKey);
+const getPublicAccount = () => {
+  return PublicAccount.createWithPublicKey(account.publicKey);
 }
 
 export {

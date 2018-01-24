@@ -9,12 +9,12 @@ declare let process: any;
 
 const mosaicHttp = new MosaicHttp();
 
-// TODO: description should be passed in
+// TODO: description 
 const createMosaic = (mosaicName: string, namespaceName: string) => {
   const mosaicDefinitionTransaction = MosaicDefinitionCreationTransaction.create(
     TimeWindow.createWithDeadline(),
     new MosaicDefinition(
-      getPublicAccount('org'),
+      getPublicAccount(),
       new MosaicId(namespaceName, mosaicName),
       "this is a description",
       new MosaicProperties(0, 100000, false, true),
