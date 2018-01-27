@@ -1,6 +1,7 @@
 import '@firebase/storage';
 import '@firebase/firestore';
 import firebase from '@firebase/app';
+import CryptoJS from 'crypto-js';
 
 const storageRef = firebase.storage().ref();
 
@@ -8,14 +9,17 @@ const data = {
   uploading: false,
   percent: 0,
   file: '',
+  hashes: '',
+  url: '',
   error: '',
 };
 
 const handleFileSelect = e => {
   data.file = e.target.files[0];
+  calculateHashes();
 };
 
-const handleFileUpload = () => {
+const handleFileUpload = callback => {
   data.uploading = true;
   var someVar = storageRef.child('file').put(data.file);
   someVar
@@ -42,15 +46,25 @@ const handleFileUpload = () => {
       // Handle unsuccessful uploads
     },
     function() {
-      var downloadURL = someVar.snapshot.downloadURL;
-      console.log(downloadURL);
+      data.url = someVar.snapshot.downloadURL;
+      callback();
     },
   );
 };
 
-const FileUploadService = {
+function calculateHashes() {
+  const reader = new FileReader();
+  reader.readAsBinaryString(data.file);
+  reader.onloadend = function() {
+    let md5 = CryptoJS.MD5(reader.result).toString();
+    let sha1 = CryptoJS.SHA1(reader.result).toString();
+    data.hashes = { md5: md5, sha1: sha1 };
+  };
+}
+
+const FileService = {
   data,
   handleFileSelect,
   handleFileUpload,
 };
-export default FileUploadService;
+export default FileService;

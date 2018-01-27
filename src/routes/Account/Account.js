@@ -13,9 +13,11 @@ import Typography from 'material-ui/Typography';
 import '@firebase/storage';
 import '@firebase/firestore';
 import firebase from '@firebase/app';
-import FileUploadService from '../../services/FileUploadService';
+import FileService from '../../services/FileService';
+import DatabaseService from '../../services/DatabaseService';
 import * as MosaicService from '../../nem/MosaicService';
 import * as NamespaceService from '../../nem/NamespaceService';
+import CryptoJS from 'crypto-js';
 
 const storageRef = firebase.storage().ref();
 const db = firebase.firestore();
@@ -30,25 +32,6 @@ const Content = styled(Card)`
   padding: 1em 2em;
   margin: 2em 0;
 `;
-
-//saves data to Firestore
-const saveToDatabase = () => {
-  db
-    .collection('users')
-    .add({ first: 'Ada', last: 'Lovelace', born: 1815 })
-    .then(function(docRef) {
-      console.log('Document written with ID: ', docRef.id);
-    })
-    .catch(function(error) {
-      console.error('Error adding document: ', error);
-    });
-};
-
-//implement
-const calculateFileHash = () => {
-  //see https://github.com/sytelus/CryptoJS
-  //specifically the rollups for md5 and sha1 (md5 is more important for now)
-};
 
 //implement
 const createMosaicForFile = () => {
@@ -74,7 +57,17 @@ const createMosaicForFile = () => {
  * Implement. Create an object with file data, such as name, description,
  * hash, and uploader address
  */
-const processFileData = () => {};
+const processFileData = () => {
+  let fileData = {
+    name: FileService.data.file.name,
+    lastModified: FileService.data.file.lastModified,
+    md5: FileService.data.hashes.md5,
+    sha1: FileService.data.hashes.sha1,
+    url: FileService.data.url,
+    owner: 'somePublicKey',
+  };
+  DatabaseService.saveFileToDatabase(fileData);
+};
 
 class Home extends React.Component<{}> {
   render() {
@@ -87,30 +80,30 @@ class Home extends React.Component<{}> {
           </Typography>
           <div className="container">
             <div className="form">
-              <input
-                type="file"
-                onChange={FileUploadService.handleFileSelect}
-              />
-              <button onClick={FileUploadService.handleFileUpload}>
+              <input type="file" onChange={FileService.handleFileSelect} />
+              <button
+                onClick={() => {
+                  FileService.handleFileUpload(processFileData);
+                }}
+              >
                 Upload
               </button>
             </div>
-            {FileUploadService.data.uploading ? (
+            {FileService.data.uploading ? (
               <div>
                 <div className="load-bar" />
-                <span>Uploading: {FileUploadService.data.percent}%</span>
+                <span>Uploading: {FileService.data.percent}%</span>
               </div>
             ) : (
               ''
             )}
             <pre>
               <code>
-                {FileUploadService.data.error ? (
-                  <span className="error">{FileUploadService.data.error}</span>
+                {FileService.data.error ? (
+                  <span className="error">{FileService.data.error}</span>
                 ) : (
                   ''
                 )}
-                {JSON.stringify(FileUploadService.data.file, null, 2)}
               </code>
             </pre>
           </div>
