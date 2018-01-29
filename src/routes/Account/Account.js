@@ -10,6 +10,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Card from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import TextField from 'material-ui/TextField';
+import Button from 'material-ui/Button';
 import '@firebase/storage';
 import '@firebase/firestore';
 import firebase from '@firebase/app';
@@ -32,6 +34,11 @@ const Content = styled(Card)`
   padding: 1em 2em;
   margin: 2em 0;
 `;
+
+const state = {
+  publicKey: '',
+  salePrice: '',
+};
 
 //implement
 const createMosaicForFile = () => {
@@ -64,10 +71,15 @@ const processFileData = () => {
     md5: FileService.data.hashes.md5,
     sha1: FileService.data.hashes.sha1,
     url: FileService.data.url,
-    owner: 'somePublicKey',
+    owner: state.publicKey,
+    price: state.salePrice,
   };
   DatabaseService.saveFileToDatabase(fileData);
 };
+
+function handleFormChange(e) {
+  state.publicKey = e.target.value;
+}
 
 class Home extends React.Component<{}> {
   render() {
@@ -80,14 +92,46 @@ class Home extends React.Component<{}> {
           </Typography>
           <div className="container">
             <div className="form">
-              <input type="file" onChange={FileService.handleFileSelect} />
-              <button
+              <TextField
+                label="Public Key"
+                helperText="Sales will be sent to this address"
+                onChange={e => {
+                  state.publicKey = e.target.value;
+                }}
+              />
+              <br />
+              <TextField
+                label="Sale Price"
+                helperText="Price to charge customers in XEM"
+                onChange={e => {
+                  state.salePrice = e.target.value;
+                }}
+              />
+              <br />
+              <br />
+
+              <input
+                id="raised-button-file"
+                style={{ display: 'none' }}
+                type="file"
+                onChange={FileService.handleFileSelect}
+              />
+
+              <label htmlFor="raised-button-file">
+                <Button raised component="span">
+                  Choose File
+                </Button>
+              </label>
+
+              <Button
+                raised
+                color="primary"
                 onClick={() => {
                   FileService.handleFileUpload(processFileData);
                 }}
               >
                 Upload
-              </button>
+              </Button>
             </div>
             {FileService.data.uploading ? (
               <div>
