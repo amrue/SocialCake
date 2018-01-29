@@ -16,6 +16,7 @@ import history from './history';
 import routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
 import { NEMLibrary, NetworkTypes } from 'nem-library';
+import { initializeAccount } from './nem/AccountUtils';
 
 firebase.initializeApp({
   apiKey: '',
@@ -26,7 +27,11 @@ firebase.initializeApp({
   messagingSenderId: '',
 });
 
+const pk = ''; // insert private key of socialcake account here
+const namespace = ''; // insert name of namsepace mosaics are created in here
+
 NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
+initializeAccount(pk, namespace);
 
 const render = props =>
   new Promise((resolve, reject) => {

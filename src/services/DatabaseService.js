@@ -5,7 +5,7 @@ const db = firebase.firestore();
 
 //saves data to Firestore
 const saveFileToDatabase = file => {
-  db
+  return db
     .collection('files')
     .add({
       fileName: file.name,
@@ -18,6 +18,7 @@ const saveFileToDatabase = file => {
     })
     .then(function(docRef) {
       console.log('Document written with ID: ', docRef.id);
+      return docRef.id;
     })
     .catch(function(error) {
       console.error('Error adding document: ', error);

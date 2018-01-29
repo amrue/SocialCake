@@ -1,8 +1,16 @@
 import { Address, Account, PublicAccount } from "nem-library";
+import * as _ from 'lodash';
 
-const userPrivateKey: string = ''; // hardcode in a private key for now
+// const userPrivateKey: string = ''; // hardcode in a private key for now
 
-let account: Account = Account.createWithPrivateKey(userPrivateKey);
+let account: Account;
+let namespaceName: String;
+
+const initializeAccount = (pk: string, namespace: string) => {
+  // userPrivateKey = pk;    if need pk elsewhere can uncomment
+  account = Account.createWithPrivateKey(pk);
+  namespaceName = namespace;
+}
 
 const getAddress = () => {
   return account.address;
@@ -16,8 +24,14 @@ const getPublicAccount = () => {
   return PublicAccount.createWithPublicKey(account.publicKey);
 }
 
+const getNamespaceName = () => {
+  return namespaceName;
+}
+
 export {
   getAddress,
   getAccount,
-  getPublicAccount
+  getPublicAccount,
+  initializeAccount,
+  getNamespaceName,
 }

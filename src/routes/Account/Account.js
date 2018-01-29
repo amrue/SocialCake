@@ -20,6 +20,7 @@ import DatabaseService from '../../services/DatabaseService';
 import * as MosaicService from '../../nem/MosaicService';
 import * as NamespaceService from '../../nem/NamespaceService';
 import CryptoJS from 'crypto-js';
+import { getNamespaceName } from '../../nem/AccountUtils';
 
 const storageRef = firebase.storage().ref();
 const db = firebase.firestore();
@@ -41,23 +42,13 @@ const state = {
 };
 
 //implement
-const createMosaicForFile = () => {
-  const mosaicName = 'thistest';
+const createMosaicForFile = (mosaicId, fileData) => {
+  const namespaceName = getNamespaceName();
 
-  // can pass in or hardcode namespace name as well, this just takes the first one associated with the account
-  NamespaceService.getDefaultNamespace().subscribe(
-    namespaceName => {
-      console.log(`Namespace is ${namespaceName}`);
-
-      MosaicService.createMosaic(mosaicName, namespaceName).subscribe(
-        m => console.log(`Mosaic successfully created ${m}`),
-        e => console.log(`Error creating mosaic ${e}`),
-      );
-    },
-    e => console.log(`Error retrieving namespace name`),
+  MosaicService.createMosaic(mosaicId, namespaceName, fileData).subscribe(
+    m => console.log(`Mosaic successfully created ${m}`),
+    e => console.log(`Error creating mosaic ${e}`),
   );
-
-  //all nem specifical services should be in the nem directory
 };
 
 /*
@@ -74,7 +65,9 @@ const processFileData = () => {
     owner: state.publicKey,
     price: state.salePrice,
   };
-  DatabaseService.saveFileToDatabase(fileData);
+  DatabaseService.saveFileToDatabase(fileData).then(docRef => {
+    createMosaicForFile(docRef, fileData);
+  });
 };
 
 function handleFormChange(e) {
