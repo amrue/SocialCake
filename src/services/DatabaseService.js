@@ -14,6 +14,7 @@ const saveFileToDatabase = file => {
       sha1: file.sha1,
       url: file.url,
       ownerAddress: file.owner,
+      price: file.price,
     })
     .then(function(docRef) {
       console.log('Document written with ID: ', docRef.id);
