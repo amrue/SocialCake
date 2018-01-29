@@ -1,9 +1,9 @@
-import { TimeWindow, MosaicDefinition, MosaicDefinitionCreationTransaction, Address, EmptyMessage, TransferTransaction, PublicAccount, MosaicId, MosaicProperties, MosaicLevy, MosaicHttp, MosaicLevyType } from "nem-library";
+import { TimeWindow, MosaicDefinition, MosaicDefinitionCreationTransaction, Address, EmptyMessage, TransferTransaction, PublicAccount, MosaicId, MosaicProperties, MosaicLevy, MosaicHttp, MosaicLevyType, Message } from "nem-library";
 import { XEM } from "nem-library/dist/src/models/mosaic/XEM";
 import { signAndBroadcastTransaction } from "./TransactionService";
 import * as Rx from 'rxjs';
 import * as _ from 'lodash';
-import { getPublicAccount } from './AccountUtils';
+import { getPublicAccount, getAccount, getPublicAccountFromKey } from './AccountUtils';
 import * as NamespaceService from "./NamespaceService";
 declare let process: any;
 
@@ -36,19 +36,25 @@ const getAllMosaics = (namespaceName: string) => {
     .map(m => m.map(m => _.get(m, 'id.name')));
 }
 
-const sendSingleMosaic = (namespaceName: string, mosaicName: string, recipientAddress: string) => {
-  const mosaicId: MosaicId = new MosaicId(namespaceName, mosaicName)
+const sendSingleMosaicWithEncryptedMessage = (namespaceName: string, mosaicName: string, recipientKey: string, message: string) => {
+  const account = getAccount();
+  const recipientAccount: PublicAccount = getPublicAccountFromKey(recipientKey);
+  const encryptedMessage = account.encryptMessage(message, recipientAccount);
 
+  return sendSingleMosaic(namespaceName, mosaicName, recipientAccount.address, encryptedMessage);
+};
+
+const sendSingleMosaic = (namespaceName: string, mosaicName: string, recipientAddress: Address, messageObject: Message) => {
   return mosaicHttp
-    .getMosaicTransferableWithAmount(mosaicId, 1)
+    .getMosaicTransferableWithAmount(new MosaicId(namespaceName, mosaicName), 1)
     .map(m => TransferTransaction.createWithMosaics(
       TimeWindow.createWithDeadline(),
-      new Address(recipientAddress),
+      recipientAddress,
       [m],
-      EmptyMessage
+      messageObject
     ))
     .flatMap(t => signAndBroadcastTransaction(t));
-};
+}
 
 export {
   createMosaic,

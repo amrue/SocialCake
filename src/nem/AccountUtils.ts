@@ -28,10 +28,15 @@ const getNamespaceName = () => {
   return namespaceName;
 }
 
+const getPublicAccountFromKey = (publicKey: string) => {
+  return PublicAccount.createWithPublicKey(publicKey);
+}
+
 export {
   getAddress,
   getAccount,
   getPublicAccount,
   initializeAccount,
   getNamespaceName,
+  getPublicAccountFromKey,
 }

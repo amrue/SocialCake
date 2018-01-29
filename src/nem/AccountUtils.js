@@ -25,3 +25,7 @@ var getNamespaceName = function() {
   return namespaceName;
 };
 exports.getNamespaceName = getNamespaceName;
+var getPublicAccountFromKey = function(publicKey) {
+  return nem_library_1.PublicAccount.createWithPublicKey(publicKey);
+};
+exports.getPublicAccountFromKey = getPublicAccountFromKey;

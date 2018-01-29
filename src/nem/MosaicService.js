@@ -49,16 +49,39 @@ var getAllMosaics = function(namespaceName) {
   });
 };
 exports.getAllMosaics = getAllMosaics;
-var sendSingleMosaic = function(namespaceName, mosaicName, recipientAddress) {
-  var mosaicId = new nem_library_1.MosaicId(namespaceName, mosaicName);
+var sendSingleMosaicWithEncryptedMessage = function(
+  namespaceName,
+  mosaicName,
+  recipientKey,
+  message,
+) {
+  var account = AccountUtils_1.getAccount();
+  var recipientAccount = AccountUtils_1.getPublicAccountFromKey(recipientKey);
+  var encryptedMessage = account.encryptMessage(message, recipientAccount);
+  return sendSingleMosaic(
+    namespaceName,
+    mosaicName,
+    recipientAccount.address,
+    encryptedMessage,
+  );
+};
+var sendSingleMosaic = function(
+  namespaceName,
+  mosaicName,
+  recipientAddress,
+  messageObject,
+) {
   return mosaicHttp
-    .getMosaicTransferableWithAmount(mosaicId, 1)
+    .getMosaicTransferableWithAmount(
+      new nem_library_1.MosaicId(namespaceName, mosaicName),
+      1,
+    )
     .map(function(m) {
       return nem_library_1.TransferTransaction.createWithMosaics(
         nem_library_1.TimeWindow.createWithDeadline(),
-        new nem_library_1.Address(recipientAddress),
+        recipientAddress,
         [m],
-        nem_library_1.EmptyMessage,
+        messageObject,
       );
     })
     .flatMap(function(t) {
