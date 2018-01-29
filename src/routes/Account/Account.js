@@ -37,7 +37,7 @@ const Content = styled(Card)`
 `;
 
 const state = {
-  publicKey: '',
+  uploaderAddress: '',
   salePrice: '',
 };
 
@@ -62,7 +62,7 @@ const processFileData = () => {
     md5: FileService.data.hashes.md5,
     sha1: FileService.data.hashes.sha1,
     url: FileService.data.url,
-    owner: state.publicKey,
+    owner: state.uploaderAddress,
     price: state.salePrice,
   };
   DatabaseService.saveFileToDatabase(fileData).then(docRef => {
@@ -86,10 +86,10 @@ class Home extends React.Component<{}> {
           <div className="container">
             <div className="form">
               <TextField
-                label="Public Key"
+                label="NEM Address"
                 helperText="Sales will be sent to this address"
                 onChange={e => {
-                  state.publicKey = e.target.value;
+                  state.uploaderAddress = e.target.value;
                 }}
               />
               <br />
