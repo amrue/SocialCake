@@ -18,20 +18,19 @@ import registerServiceWorker from './registerServiceWorker';
 import { NEMLibrary, NetworkTypes } from 'nem-library';
 import { initializeAccount } from './nem/AccountUtils';
 
+import * as config from './config';
+
 firebase.initializeApp({
-  apiKey: '',
+  apiKey: config.firebase.apiKey,
   authDomain: 'socialcake-nem-hackathon.firebaseapp.com',
   databaseURL: 'https://socialcake-nem-hackathon.firebaseio.com',
   projectId: 'socialcake-nem-hackathon',
   storageBucket: 'socialcake-nem-hackathon.appspot.com',
-  messagingSenderId: '',
+  messagingSenderId: config.firebase.messagingSenderId,
 });
 
-const pk = ''; // insert private key of socialcake account here
-const namespace = ''; // insert name of namsepace mosaics are created in here
-
 NEMLibrary.bootstrap(NetworkTypes.TEST_NET);
-initializeAccount(pk, namespace);
+initializeAccount(config.nem.privateKey, config.nem.namespace);
 
 const render = props =>
   new Promise((resolve, reject) => {

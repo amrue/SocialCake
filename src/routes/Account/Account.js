@@ -20,7 +20,6 @@ import DatabaseService from '../../services/DatabaseService';
 import * as MosaicService from '../../nem/MosaicService';
 import * as NamespaceService from '../../nem/NamespaceService';
 import CryptoJS from 'crypto-js';
-import { getNamespaceName } from '../../nem/AccountUtils';
 
 const storageRef = firebase.storage().ref();
 const db = firebase.firestore();
@@ -43,9 +42,7 @@ const state = {
 
 //implement
 const createMosaicForFile = (mosaicId, fileData) => {
-  const namespaceName = getNamespaceName();
-
-  MosaicService.createMosaic(mosaicId, namespaceName, fileData).subscribe(
+  MosaicService.createMosaic(mosaicId, fileData).subscribe(
     m => console.log(`Mosaic successfully created ${m}`),
     e => console.log(`Error creating mosaic ${e}`),
   );

@@ -3,15 +3,15 @@ import { XEM } from "nem-library/dist/src/models/mosaic/XEM";
 import { signAndBroadcastTransaction } from "./TransactionService";
 import * as Rx from 'rxjs';
 import * as _ from 'lodash';
-import { getPublicAccount, getAccount, getPublicAccountFromKey } from './AccountUtils';
+import { getPublicAccount, getAccount, getPublicAccountFromKey, getNamespaceName } from './AccountUtils';
 import * as NamespaceService from "./NamespaceService";
 declare let process: any;
 
 const mosaicHttp = new MosaicHttp();
 
-const createMosaic = (mosaicName: string, namespaceName: string, fileData) => {
+const createMosaic = (mosaicName: string, fileData) => {
   // update so price is = to price minus fees which I think are 15000 XEM? verify
-  const mosaicLevy: MosaicLevy = new MosaicLevy(MosaicLevyType.Absolute, new Address(fileData.owner), new MosaicId('nem', 'xem'), fileData.price);
+  const mosaicLevy: MosaicLevy = new MosaicLevy(MosaicLevyType.Absolute, new Address(fileData.owner), new MosaicId('nem', 'xem'), fileData.price * 1000000);
 
   // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
   const defaultProperties: MosaicProperties = new MosaicProperties(0, 100000, false, true);
@@ -20,7 +20,7 @@ const createMosaic = (mosaicName: string, namespaceName: string, fileData) => {
     TimeWindow.createWithDeadline(),
     new MosaicDefinition(
       getPublicAccount(),
-      new MosaicId(namespaceName, mosaicName.toLowerCase()),
+      new MosaicId(getNamespaceName(), mosaicName.toLowerCase()),
       "this is a description",
       fileData.limitedQuantity ? new MosaicProperties(0, fileData.limitedQuantity, false, false) : defaultProperties,
       mosaicLevy,
@@ -30,23 +30,23 @@ const createMosaic = (mosaicName: string, namespaceName: string, fileData) => {
   return signAndBroadcastTransaction(mosaicDefinitionTransaction);
 };
 
-const getAllMosaics = (namespaceName: string) => {
+const getAllMosaics = () => {
   return mosaicHttp
-    .getAllMosaicsGivenNamespace(namespaceName)
+    .getAllMosaicsGivenNamespace(getNamespaceName())
     .map(m => m.map(m => _.get(m, 'id.name')));
 }
 
-const sendSingleMosaicWithEncryptedMessage = (namespaceName: string, mosaicName: string, recipientKey: string, message: string) => {
+const sendSingleMosaicWithEncryptedMessage = (mosaicName: string, recipientKey: string, message: string) => {
   const account = getAccount();
   const recipientAccount: PublicAccount = getPublicAccountFromKey(recipientKey);
   const encryptedMessage = account.encryptMessage(message, recipientAccount);
 
-  return sendSingleMosaic(namespaceName, mosaicName, recipientAccount.address, encryptedMessage);
+  return sendSingleMosaic(mosaicName, recipientAccount.address, encryptedMessage);
 };
 
-const sendSingleMosaic = (namespaceName: string, mosaicName: string, recipientAddress: Address, messageObject: Message) => {
+const sendSingleMosaic = (mosaicName: string, recipientAddress: Address, messageObject: Message) => {
   return mosaicHttp
-    .getMosaicTransferableWithAmount(new MosaicId(namespaceName, mosaicName), 1)
+    .getMosaicTransferableWithAmount(new MosaicId(getNamespaceName(), mosaicName), 1)
     .map(m => TransferTransaction.createWithMosaics(
       TimeWindow.createWithDeadline(),
       recipientAddress,
@@ -60,4 +60,5 @@ export {
   createMosaic,
   getAllMosaics,
   sendSingleMosaic,
+  sendSingleMosaicWithEncryptedMessage,
 }

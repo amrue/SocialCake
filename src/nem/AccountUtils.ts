@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 // const userPrivateKey: string = ''; // hardcode in a private key for now
 
 let account: Account;
-let namespaceName: String;
+let namespaceName: string;
 
 const initializeAccount = (pk: string, namespace: string) => {
   // userPrivateKey = pk;    if need pk elsewhere can uncomment

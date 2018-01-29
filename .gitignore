@@ -31,3 +31,4 @@ firebase-error.log*
 !.vscode/settings.json
 
 .idea/
+/src/config.js
