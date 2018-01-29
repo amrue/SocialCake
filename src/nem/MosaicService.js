@@ -4,15 +4,36 @@ var TransactionService_1 = require('./TransactionService');
 var _ = require('lodash');
 var AccountUtils_1 = require('./AccountUtils');
 var mosaicHttp = new nem_library_1.MosaicHttp();
-// TODO: description should be passed in
-var createMosaic = function(mosaicName, namespaceName) {
+var createMosaic = function(mosaicName, namespaceName, fileData) {
+  // update so price is = to price minus fees which I think are 15000 XEM? verify
+  var mosaicLevy = new nem_library_1.MosaicLevy(
+    nem_library_1.MosaicLevyType.Absolute,
+    new nem_library_1.Address(fileData.owner),
+    new nem_library_1.MosaicId('nem', 'xem'),
+    fileData.price,
+  );
+  // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
+  var defaultProperties = new nem_library_1.MosaicProperties(
+    0,
+    100000,
+    false,
+    true,
+  );
   var mosaicDefinitionTransaction = nem_library_1.MosaicDefinitionCreationTransaction.create(
     nem_library_1.TimeWindow.createWithDeadline(),
     new nem_library_1.MosaicDefinition(
-      AccountUtils_1.getPublicAccount('org'),
-      new nem_library_1.MosaicId(namespaceName, mosaicName),
+      AccountUtils_1.getPublicAccount(),
+      new nem_library_1.MosaicId(namespaceName, mosaicName.toLowerCase()),
       'this is a description',
-      new nem_library_1.MosaicProperties(0, 100000, false, true),
+      fileData.limitedQuantity
+        ? new nem_library_1.MosaicProperties(
+            0,
+            fileData.limitedQuantity,
+            false,
+            false,
+          )
+        : defaultProperties,
+      mosaicLevy,
     ),
   );
   return TransactionService_1.signAndBroadcastTransaction(

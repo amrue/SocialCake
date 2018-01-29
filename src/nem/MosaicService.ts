@@ -1,4 +1,4 @@
-import { TimeWindow, MosaicDefinition, MosaicDefinitionCreationTransaction, Address, EmptyMessage, TransferTransaction, PublicAccount, MosaicId, MosaicProperties, MosaicLevy, MosaicHttp } from "nem-library";
+import { TimeWindow, MosaicDefinition, MosaicDefinitionCreationTransaction, Address, EmptyMessage, TransferTransaction, PublicAccount, MosaicId, MosaicProperties, MosaicLevy, MosaicHttp, MosaicLevyType } from "nem-library";
 import { XEM } from "nem-library/dist/src/models/mosaic/XEM";
 import { signAndBroadcastTransaction } from "./TransactionService";
 import * as Rx from 'rxjs';
@@ -9,15 +9,21 @@ declare let process: any;
 
 const mosaicHttp = new MosaicHttp();
 
-// TODO: description 
-const createMosaic = (mosaicName: string, namespaceName: string) => {
+const createMosaic = (mosaicName: string, namespaceName: string, fileData) => {
+  // update so price is = to price minus fees which I think are 15000 XEM? verify
+  const mosaicLevy: MosaicLevy = new MosaicLevy(MosaicLevyType.Absolute, new Address(fileData.owner), new MosaicId('nem', 'xem'), fileData.price);
+
+  // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
+  const defaultProperties: MosaicProperties = new MosaicProperties(0, 100000, false, true);
+
   const mosaicDefinitionTransaction = MosaicDefinitionCreationTransaction.create(
     TimeWindow.createWithDeadline(),
     new MosaicDefinition(
       getPublicAccount(),
-      new MosaicId(namespaceName, mosaicName),
+      new MosaicId(namespaceName, mosaicName.toLowerCase()),
       "this is a description",
-      new MosaicProperties(0, 100000, false, true),
+      fileData.limitedQuantity ? new MosaicProperties(0, fileData.limitedQuantity, false, false) : defaultProperties,
+      mosaicLevy,
     )
   )
 
