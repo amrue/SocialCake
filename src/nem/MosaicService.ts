@@ -46,7 +46,7 @@ const sendSingleMosaicWithEncryptedMessage = (mosaicName: string, recipientKey: 
 
 const sendSingleMosaic = (mosaicName: string, recipientAddress: Address, messageObject: Message) => {
   return mosaicHttp
-    .getMosaicTransferableWithAmount(new MosaicId(getNamespaceName(), mosaicName), 1)
+    .getMosaicTransferableWithAmount(new MosaicId(getNamespaceName(), mosaicName.toLowerCase()), 1)
     .map(m => TransferTransaction.createWithMosaics(
       TimeWindow.createWithDeadline(),
       recipientAddress,

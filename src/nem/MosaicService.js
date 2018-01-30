@@ -72,7 +72,10 @@ exports.sendSingleMosaicWithEncryptedMessage = sendSingleMosaicWithEncryptedMess
 var sendSingleMosaic = function(mosaicName, recipientAddress, messageObject) {
   return mosaicHttp
     .getMosaicTransferableWithAmount(
-      new nem_library_1.MosaicId(AccountUtils_1.getNamespaceName(), mosaicName),
+      new nem_library_1.MosaicId(
+        AccountUtils_1.getNamespaceName(),
+        mosaicName.toLowerCase(),
+      ),
       1,
     )
     .map(function(m) {
