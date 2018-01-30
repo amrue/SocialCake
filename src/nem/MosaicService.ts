@@ -11,7 +11,7 @@ const mosaicHttp = new MosaicHttp();
 
 const createMosaic = (mosaicName: string, fileData) => {
   // update so price is = to price minus fees which I think are 15000 XEM? verify
-  const mosaicLevy: MosaicLevy = new MosaicLevy(MosaicLevyType.Absolute, new Address(fileData.owner), new MosaicId('nem', 'xem'), fileData.price * 1000000);
+  const mosaicLevy: MosaicLevy = new MosaicLevy(MosaicLevyType.Absolute, new Address(fileData.owner), new MosaicId('nem', 'xem'), Math.round(fileData.price * 1000000));
 
   // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
   const defaultProperties: MosaicProperties = new MosaicProperties(0, 100000, false, true);

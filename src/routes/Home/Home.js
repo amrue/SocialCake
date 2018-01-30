@@ -45,17 +45,27 @@ const callback = function(frame) {
     if (!message) return;
     let productId = nem.default.utils.format.hexMessage(message);
     let docRef = DatabaseService.getFileFromDatabase(productId);
-    sendFileToCustomer(docRef, customerPublicKey);
+    let amountPaid = transaction.amount;
+    sendFileToCustomer(docRef, customerPublicKey, amountPaid);
   });
 };
 
-const sendFileToCustomer = (docRef, customerPublicKey) => {
+const sendFileToCustomer = (docRef, customerPublicKey, amountPaid) => {
   docRef
     .get()
     .then(function(doc) {
       if (doc.exists) {
+        if (amountPaid !== Math.round(doc.data().price * 1000000)) {
+          console.log(
+            `The amount sent ${amountPaid} does not match the price ${doc.price *
+              1000000}`,
+          );
+          return;
+        }
+
         console.log('Document data:', doc.data());
         let message = doc.data().url;
+
         console.log(doc.id);
         MosaicService.sendSingleMosaicWithEncryptedMessage(
           doc.id,
