@@ -25,8 +25,14 @@ const saveFileToDatabase = file => {
     });
 };
 
+const getFileFromDatabase = productId => {
+  let docRef = db.collection('files').doc(productId);
+  return docRef;
+};
+
 const DatabaseService = {
   saveFileToDatabase,
+  getFileFromDatabase,
 };
 
 export default DatabaseService;
