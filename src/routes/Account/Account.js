@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Card from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
 import '@firebase/storage';
 import '@firebase/firestore';
@@ -35,6 +36,15 @@ const UploadButtonStyle = {
   marginLeft: '40px',
 };
 
+const SnackTextStyle = {
+  display: 'block',
+  textAlign: 'center',
+};
+
+const SnackHighlightStyle = {
+  color: '#1FBCD3',
+};
+
 const createMosaicForFile = (mosaicId, fileData, cb) => {
   MosaicService.createMosaic(mosaicId, fileData).subscribe(
     m => {
@@ -57,10 +67,16 @@ class Home extends React.Component<{}> {
       salePrice: '',
       isDocumentUploaded: false,
       mosaicId: '',
+      open: false,
+      anchor: {
+        vertical: null,
+        horizontal: null,
+      },
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.handleUploaderAddressChange = this.handleUploaderAddressChange.bind(
       this,
     );
@@ -93,6 +109,10 @@ class Home extends React.Component<{}> {
     });
   }
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   processFileData() {
     let fileData = {
       name: FileService.data.file.name,
@@ -103,14 +123,20 @@ class Home extends React.Component<{}> {
       owner: this.state.uploaderAddress,
       price: this.state.salePrice,
     };
-    DatabaseService.saveFileToDatabase(fileData).then(docRef => {
-      this.handleCreateMosaicForFile(docRef, fileData);
-    });
+    DatabaseService.saveFileToDatabase(fileData)
+      .then(docRef => {
+        this.handleCreateMosaicForFile(docRef, fileData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   setMosaicId(error, mosaicId) {
     this.setState({
       mosaicId: mosaicId || '',
+      open: true,
+      anchor: { vertical: 'top', horizontal: 'center' },
     });
   }
 
@@ -180,7 +206,6 @@ class Home extends React.Component<{}> {
             ) : (
               ''
             )}
-            {this.state.mosaicId && <div>Mosaic Id: {this.state.mosaicId}</div>}
             <pre>
               <code>
                 {FileService.data.error ? (
@@ -192,6 +217,27 @@ class Home extends React.Component<{}> {
             </pre>
           </div>
         </Content>
+        <Snackbar
+          anchorOrigin={this.state.anchor}
+          open={this.state.open}
+          onClose={this.handleClose}
+          SnackbarContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={
+            <span id="message-id">
+              <div style={SnackTextStyle}>
+                Share with your followers! SocialCake payment address: <br />
+                <span style={SnackHighlightStyle}>
+                  TDJOEZ-OVQOOL-UQTGVT-5ST43S-IGC35O-E6JA7G-KIT5
+                </span>
+                <br />
+                Mosaic Id:{' '}
+                <span style={SnackHighlightStyle}> {this.state.mosaicId} </span>
+              </div>
+            </span>
+          }
+        />
       </Container>
     );
   }
