@@ -34,14 +34,7 @@ const ExtLink = styled.a`
 
 class Footer extends React.Component<{}> {
   render() {
-    return (
-      <Container>
-        <Copyright css="padding-right: 0.5em">&copy; 2015-present</Copyright>
-        <ExtLink href="https://github.com/kriasoft">Kriasoft</ExtLink>
-        <Separator>|</Separator>
-        <ExtLink href="/privacy">Privacy Policy</ExtLink>
-      </Container>
-    );
+    return <Container />;
   }
 }
 

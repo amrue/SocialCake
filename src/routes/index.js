@@ -38,6 +38,14 @@ const routes = [
       body: <Privacy user={user} />,
     }),
   },
+  {
+    path: '/upload',
+    components: () => [import(/* webpackChunkName: 'upload' */ './Upload')],
+    render: ({ user, components: [Upload] }) => ({
+      title: 'Upload File',
+      body: <Upload user={user} />,
+    }),
+  },
 ];
 
 function resolveRoute(ctx) {

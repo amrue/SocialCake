@@ -39,7 +39,6 @@ const stompClient = stomp.client(
 const callback = function(frame) {
   stompClient.subscribe(`/unconfirmed/${getAddress().plain()}`, function(data) {
     let transaction = JSON.parse(data.body).transaction;
-    debugger;
     if (transaction.signer == getPublicKey()) return;
     let customerPublicKey = transaction.signer;
     let message = transaction.message;
@@ -54,7 +53,6 @@ const sendFileToCustomer = (docRef, customerPublicKey) => {
   docRef
     .get()
     .then(function(doc) {
-      debugger;
       if (doc.exists) {
         console.log('Document data:', doc.data());
         let message = doc.data().url;
@@ -66,13 +64,11 @@ const sendFileToCustomer = (docRef, customerPublicKey) => {
         ).subscribe(
           m => {
             console.log(m);
-            debugger;
             console.log(
               `Sucessfully sent mosaic ${doc.id} to ${customerPublicKey}`,
             );
           },
           e => {
-            debugger;
             console.log('Error sending transaction', e);
           },
         );

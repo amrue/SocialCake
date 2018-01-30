@@ -64,9 +64,9 @@ class Toolbar extends React.Component<{}, {}> {
     this.setState({ accountMenuAnchor: null });
   };
 
-  goToAccount = () => {
+  goToUpload = () => {
     this.setState({ accountMenuAnchor: null });
-    history.push('/account');
+    history.push('/upload');
   };
 
   render() {
@@ -88,7 +88,7 @@ class Toolbar extends React.Component<{}, {}> {
                 open={accountMenuOpen}
                 onClose={this.handleAccountMenuClose}
               >
-                <MenuItem onClick={this.goToAccount}>My Account</MenuItem>
+                <MenuItem onClick={this.goToUpload}>Upload File</MenuItem>
                 <MenuItem onClick={auth.signOut}>Sign Out</MenuItem>
               </Menu>
             </React.Fragment>
