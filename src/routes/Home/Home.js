@@ -83,15 +83,22 @@ class Home extends React.Component<{}> {
       <Container>
         <Content>
           <Typography type="headline" gutterBottom>
-            <strong>React Starter Kit</strong> for Firebase and GraphQL
+            <strong>SocialCake:</strong> Sell directly to your fans and
+            followers
           </Typography>
           <Typography type="body1" paragraph>
-            This is a boilerplate project for creating React applications.
+            SocialCake allows content creators of all kinds to sell digital
+            goods directly to their audience. Artists, musicians, writers, and
+            more can sell digital content simply by sharing a message.
           </Typography>
           <Typography type="body1" paragraph>
-            <a href="https://github.com/kriasoft/react-firebase-starter">
-              https://github.com/kriasoft/react-firebase-starter
-            </a>
+            Start by signing up and uploading a file. Then, you will receive a
+            unique file ID. Share this ID on Facebook, Twitter, YouTube, or
+            anywhere else you reach your audience. They send a payment with
+            their NEM wallet to SocialCake using your ID as the message.
+            SocialCake instantly sends them a Mosaic with an encrypted download
+            link to the file, and file metadata such as the hashes to verify the
+            integrity of the file and prove that they own it.
           </Typography>
         </Content>
       </Container>
