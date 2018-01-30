@@ -1,11 +1,3 @@
-/**
- * React Starter Kit for Firebase and GraphQL
- * https://github.com/kriasoft/react-firebase-starter
- * Copyright (c) 2015-present Kriasoft | MIT License
- */
-
-/* @flow */
-
 import React from 'react';
 import styled from 'styled-components';
 import { MuiThemeProvider } from 'material-ui/styles';
@@ -20,8 +12,6 @@ const Container = styled.div`
     no-repeat center center fixed;
   background-size: cover;
 `;
-
-//http://koistya.github.io/files/background-v1-1920x1080.jpg
 
 class App extends React.Component<{}> {
   componentDidMount() {

@@ -1,11 +1,3 @@
-/**
- * React Starter Kit for Firebase and GraphQL
- * https://github.com/kriasoft/react-firebase-starter
- * Copyright (c) 2015-present Kriasoft | MIT License
- */
-
-/* @flow */
-
 import React from 'react';
 import UniversalRouter from 'universal-router/main.js';
 
@@ -18,7 +10,7 @@ const routes = [
     path: '',
     components: () => [import(/* webpackChunkName: 'home' */ './Home')],
     render: ({ user, components: [Home] }) => ({
-      title: 'React Starter Kit for Firebase and GraphQL',
+      title: 'SocialCake',
       body: <Home user={user} />,
     }),
   },
@@ -26,7 +18,7 @@ const routes = [
     path: '/account',
     components: () => [import(/* webpackChunkName: 'Account' */ './Account')],
     render: ({ user, components: [Account] }) => ({
-      title: 'My Account • React Firebase Starter',
+      title: 'Upload File',
       body: <Account user={user} />,
     }),
   },

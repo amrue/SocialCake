@@ -1,11 +1,3 @@
-/**
- * React Starter Kit for Firebase and GraphQL
- * https://github.com/kriasoft/react-firebase-starter
- * Copyright (c) 2015-present Kriasoft | MIT License
- */
-
-/* @flow */
-
 import React from 'react';
 import styled from 'styled-components';
 import Card from 'material-ui/Card';
@@ -35,12 +27,19 @@ const Content = styled(Card)`
   margin: 2em 0;
 `;
 
+const TextFieldStyle = {
+  margin: '10px 0 10px 0',
+};
+
+const UploadButtonStyle = {
+  marginLeft: '40px',
+};
+
 const state = {
   uploaderAddress: '',
   salePrice: '',
 };
 
-//implement
 const createMosaicForFile = (mosaicId, fileData) => {
   MosaicService.createMosaic(mosaicId, fileData).subscribe(
     m => console.log(`Mosaic successfully created ${m}`),
@@ -48,10 +47,7 @@ const createMosaicForFile = (mosaicId, fileData) => {
   );
 };
 
-/*
- * Implement. Create an object with file data, such as name, description,
- * hash, and uploader address
- */
+// process uploaded file data and create mosaic
 const processFileData = () => {
   let fileData = {
     name: FileService.data.file.name,
@@ -76,26 +72,31 @@ class Home extends React.Component<{}> {
     return (
       <Container>
         <Content>
-          <Typography type="headline">My Account</Typography>
+          <Typography type="headline">Upload A File</Typography>
           <Typography type="body1">
-            Welcome, {this.props.user && this.props.user.displayName}!
+            For user {this.props.user && this.props.user.displayName}
           </Typography>
           <div className="container">
             <div className="form">
               <TextField
+                style={TextFieldStyle}
                 label="NEM Address"
                 helperText="Sales will be sent to this address"
                 onChange={e => {
                   state.uploaderAddress = e.target.value;
                 }}
+                fullWidth
               />
               <br />
               <TextField
+                style={TextFieldStyle}
                 label="Sale Price"
                 helperText="Price to charge customers in XEM"
                 onChange={e => {
                   state.salePrice = e.target.value;
                 }}
+                fullWidth
+                type="number"
               />
               <br />
               <br />
@@ -114,6 +115,7 @@ class Home extends React.Component<{}> {
               </label>
 
               <Button
+                style={UploadButtonStyle}
                 raised
                 color="primary"
                 onClick={() => {
