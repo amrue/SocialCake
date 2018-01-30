@@ -16,7 +16,7 @@ import * as nem from 'nem-sdk';
 import DatabaseService from '../../services/DatabaseService';
 import * as MosaicService from '../../nem/MosaicService';
 
-import * as config from '../../config';
+import { getPublicKey, getAddress } from '../../nem/AccountUtils';
 
 const Container = styled.div`
   max-width: 600px;
@@ -37,33 +37,44 @@ const stompClient = stomp.client(
 // subscribe to blockchain notifications for our address
 // parse message to find file customer has purchased
 const callback = function(frame) {
-  stompClient.subscribe(
-    '/unconfirmed/TDJOEZOVQOOLUQTGVT5ST43SIGC35OE6JA7GKIT5',
-    function(data) {
-      let transaction = JSON.parse(data.body).transaction;
-      // ignore messages sent by us
-      if (transaction.signer == config.nem.testKey) return;
-      let customerPublicKey = transaction.signer;
-      let message = transaction.message;
-      let productId = nem.default.utils.format.hexMessage(message);
-      let docRef = DatabaseService.getFileFromDatabase(productId);
-      sendFileToCustomer(docRef, customerPublicKey);
-    },
-  );
+  stompClient.subscribe(`/unconfirmed/${getAddress().plain()}`, function(data) {
+    let transaction = JSON.parse(data.body).transaction;
+    debugger;
+    if (transaction.signer == getPublicKey()) return;
+    let customerPublicKey = transaction.signer;
+    let message = transaction.message;
+    if (!message) return;
+    let productId = nem.default.utils.format.hexMessage(message);
+    let docRef = DatabaseService.getFileFromDatabase(productId);
+    sendFileToCustomer(docRef, customerPublicKey);
+  });
 };
 
 const sendFileToCustomer = (docRef, customerPublicKey) => {
   docRef
     .get()
     .then(function(doc) {
+      debugger;
       if (doc.exists) {
         console.log('Document data:', doc.data());
         let message = doc.data().url;
-        console.log(doc.id.toLowerCase());
+        console.log(doc.id);
         MosaicService.sendSingleMosaicWithEncryptedMessage(
-          doc.id.toLowerCase(),
+          doc.id,
           customerPublicKey,
           message,
+        ).subscribe(
+          m => {
+            console.log(m);
+            debugger;
+            console.log(
+              `Sucessfully sent mosaic ${doc.id} to ${customerPublicKey}`,
+            );
+          },
+          e => {
+            debugger;
+            console.log('Error sending transaction', e);
+          },
         );
       } else {
         // doc.data() is undefined

@@ -20,6 +20,10 @@ const getAccount = () => {
   return account;
 }
 
+const getPublicKey = () => {
+  return account.publicKey;
+}
+
 const getPublicAccount = () => {
   return PublicAccount.createWithPublicKey(account.publicKey);
 }
@@ -39,4 +43,5 @@ export {
   initializeAccount,
   getNamespaceName,
   getPublicAccountFromKey,
+  getPublicKey,
 }

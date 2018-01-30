@@ -35,39 +35,89 @@ const UploadButtonStyle = {
   marginLeft: '40px',
 };
 
-const state = {
-  uploaderAddress: '',
-  salePrice: '',
-};
-
-const createMosaicForFile = (mosaicId, fileData) => {
+const createMosaicForFile = (mosaicId, fileData, cb) => {
   MosaicService.createMosaic(mosaicId, fileData).subscribe(
-    m => console.log(`Mosaic successfully created ${m}`),
-    e => console.log(`Error creating mosaic ${e}`),
+    m => {
+      console.log(`Mosaic successfully created`);
+      cb(null, mosaicId);
+    },
+    e => {
+      console.log(`Error creating mosaic ${e}`);
+      cb(e);
+    },
   );
 };
 
-// process uploaded file data and create mosaic
-const processFileData = () => {
-  let fileData = {
-    name: FileService.data.file.name,
-    lastModified: FileService.data.file.lastModified,
-    md5: FileService.data.hashes.md5,
-    sha1: FileService.data.hashes.sha1,
-    url: FileService.data.url,
-    owner: state.uploaderAddress,
-    price: state.salePrice,
-  };
-  DatabaseService.saveFileToDatabase(fileData).then(docRef => {
-    createMosaicForFile(docRef, fileData);
-  });
-};
-
-function handleFormChange(e) {
-  state.publicKey = e.target.value;
-}
-
 class Home extends React.Component<{}> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      uploaderAddress: '',
+      salePrice: '',
+      isDocumentUploaded: false,
+      mosaicId: '',
+    };
+
+    this.handleFileSelect = this.handleFileSelect.bind(this);
+    this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.handleUploaderAddressChange = this.handleUploaderAddressChange.bind(
+      this,
+    );
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.processFileData = this.processFileData.bind(this);
+    this.handleCreateMosaicForFile = this.handleCreateMosaicForFile.bind(this);
+    this.setMosaicId = this.setMosaicId.bind(this);
+  }
+
+  handleFileSelect(event) {
+    FileService.handleFileSelect(event);
+    this.setState({
+      isDocumentUploaded: true,
+    });
+  }
+
+  handleFileUpload() {
+    FileService.handleFileUpload(this.processFileData);
+  }
+
+  handleUploaderAddressChange(event) {
+    this.setState({
+      uploaderAddress: event.target.value,
+    });
+  }
+
+  handlePriceChange(event) {
+    this.setState({
+      salePrice: event.target.value,
+    });
+  }
+
+  processFileData() {
+    let fileData = {
+      name: FileService.data.file.name,
+      lastModified: FileService.data.file.lastModified,
+      md5: FileService.data.hashes.md5,
+      sha1: FileService.data.hashes.sha1,
+      url: FileService.data.url,
+      owner: this.state.uploaderAddress,
+      price: this.state.salePrice,
+    };
+    DatabaseService.saveFileToDatabase(fileData).then(docRef => {
+      this.handleCreateMosaicForFile(docRef, fileData);
+    });
+  }
+
+  setMosaicId(error, mosaicId) {
+    this.setState({
+      mosaicId: mosaicId || '',
+    });
+  }
+
+  handleCreateMosaicForFile(mosaicId, fileData) {
+    createMosaicForFile(mosaicId, fileData, this.setMosaicId);
+  }
+
   render() {
     return (
       <Container>
@@ -82,9 +132,8 @@ class Home extends React.Component<{}> {
                 style={TextFieldStyle}
                 label="NEM Address"
                 helperText="Sales will be sent to this address"
-                onChange={e => {
-                  state.uploaderAddress = e.target.value;
-                }}
+                onChange={this.handleUploaderAddressChange}
+                value={this.state.uploaderAddress}
                 fullWidth
               />
               <br />
@@ -92,11 +141,10 @@ class Home extends React.Component<{}> {
                 style={TextFieldStyle}
                 label="Sale Price"
                 helperText="Price to charge customers in XEM"
-                onChange={e => {
-                  state.salePrice = e.target.value;
-                }}
+                onChange={this.handlePriceChange}
                 fullWidth
                 type="number"
+                value={this.state.salePrice}
               />
               <br />
               <br />
@@ -105,7 +153,7 @@ class Home extends React.Component<{}> {
                 id="raised-button-file"
                 style={{ display: 'none' }}
                 type="file"
-                onChange={FileService.handleFileSelect}
+                onChange={this.handleFileSelect}
               />
 
               <label htmlFor="raised-button-file">
@@ -118,9 +166,8 @@ class Home extends React.Component<{}> {
                 style={UploadButtonStyle}
                 raised
                 color="primary"
-                onClick={() => {
-                  FileService.handleFileUpload(processFileData);
-                }}
+                onClick={this.handleFileUpload}
+                disabled={!this.state.isDocumentUploaded}
               >
                 Upload
               </Button>
@@ -133,6 +180,7 @@ class Home extends React.Component<{}> {
             ) : (
               ''
             )}
+            {this.state.mosaicId && <div>Mosaic Id: {this.state.mosaicId}</div>}
             <pre>
               <code>
                 {FileService.data.error ? (

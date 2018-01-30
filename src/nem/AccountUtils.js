@@ -17,6 +17,10 @@ var getAccount = function() {
   return account;
 };
 exports.getAccount = getAccount;
+var getPublicKey = function() {
+  return account.publicKey;
+};
+exports.getPublicKey = getPublicKey;
 var getPublicAccount = function() {
   return nem_library_1.PublicAccount.createWithPublicKey(account.publicKey);
 };
