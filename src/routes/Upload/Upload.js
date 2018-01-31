@@ -5,14 +5,12 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
-import Checkbox from 'material-ui/Checkbox';
 import '@firebase/storage';
 import '@firebase/firestore';
 import firebase from '@firebase/app';
 import FileService from '../../services/FileService';
 import DatabaseService from '../../services/DatabaseService';
 import * as MosaicService from '../../nem/MosaicService';
-import * as NamespaceService from '../../nem/NamespaceService';
 import CryptoJS from 'crypto-js';
 
 const storageRef = firebase.storage().ref();
@@ -45,10 +43,6 @@ const SnackTextStyle = {
 
 const SnackHighlightStyle = {
   color: '#1FBCD3',
-};
-
-const CheckboxStyle = {
-  marginBottom: 16,
 };
 
 const filenameStyle = {

@@ -22,22 +22,6 @@ const routes = [
     }),
   },
   {
-    path: '/about',
-    components: () => [import(/* webpackChunkName: 'about' */ './About')],
-    render: ({ user, components: [About] }) => ({
-      title: 'About Us • React Firebase Starter',
-      body: <About user={user} />,
-    }),
-  },
-  {
-    path: '/privacy',
-    components: () => [import(/* webpackChunkName: 'privacy' */ './Privacy')],
-    render: ({ user, components: [Privacy] }) => ({
-      title: 'Privacy Policy • React Firebase Starter',
-      body: <Privacy user={user} />,
-    }),
-  },
-  {
     path: '/upload',
     components: () => [import(/* webpackChunkName: 'upload' */ './Upload')],
     render: ({ user, components: [Upload] }) => ({
