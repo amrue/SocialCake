@@ -46,10 +46,10 @@ const SnackHighlightStyle = {
 };
 
 const filenameStyle = {
-  color: 'green',
   fontSize: '12px',
   position: 'absolute',
-  bottom: '7px',
+  bottom: '40px',
+  right: '160px',
 };
 
 const createMosaicForFile = (mosaicId, fileData, cb) => {
