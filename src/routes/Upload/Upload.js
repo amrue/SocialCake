@@ -22,6 +22,7 @@ const Container = styled.div`
   max-width: 600px;
   box-sizing: border-box;
   margin: 0 auto;
+  position: relative;
 `;
 
 const Content = styled(Card)`
@@ -48,6 +49,13 @@ const SnackHighlightStyle = {
 
 const CheckboxStyle = {
   marginBottom: 16,
+};
+
+const filenameStyle = {
+  color: 'green',
+  fontSize: '12px',
+  position: 'absolute',
+  bottom: '7px',
 };
 
 const createMosaicForFile = (mosaicId, fileData, cb) => {
@@ -78,6 +86,7 @@ class Upload extends React.Component<{}> {
         horizontal: null,
       },
       quantity: 0,
+      filename: '',
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -100,6 +109,7 @@ class Upload extends React.Component<{}> {
     FileService.handleFileSelect(event);
     this.setState({
       isDocumentUploaded: true,
+      filename: event.target.value,
     });
   }
 
@@ -202,7 +212,7 @@ class Upload extends React.Component<{}> {
               <TextField
                 style={TextFieldStyle}
                 label="Total Quantity"
-                helperText="The quantity that this item will be limited to.  Leave at 0 if the quantity is not limited"
+                helperText="Quantity for sale. Set to 0 for unlimited quantity."
                 onChange={this.handleQuantityChange}
                 fullWidth
                 type="number"
@@ -222,6 +232,10 @@ class Upload extends React.Component<{}> {
                   Choose File
                 </Button>
               </label>
+
+              {this.state.filename ? (
+                <div style={filenameStyle}>{this.state.filename}</div>
+              ) : null}
 
               <Button
                 style={UploadButtonStyle}
