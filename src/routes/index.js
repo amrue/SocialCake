@@ -4,7 +4,6 @@ import UniversalRouter from 'universal-router/main.js';
 // The list of all application routes where each route contains a URL path string (pattern),
 // the list of components to load asynchroneously (chunks), data requirements (GraphQL query),
 // and a render() function which shapes the result to be passed into the top-level (App) component.
-// For more information visit https://github.com/kriasoft/universal-router
 const routes = [
   {
     path: '',

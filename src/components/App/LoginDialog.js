@@ -1,11 +1,3 @@
-/**
- * React Starter Kit for Firebase and GraphQL
- * https://github.com/kriasoft/react-firebase-starter
- * Copyright (c) 2015-present Kriasoft | MIT License
- */
-
-/* @flow */
-
 import React from 'react';
 import Button from 'material-ui/Button';
 import Dialog, { DialogTitle, DialogContent } from 'material-ui/Dialog';
