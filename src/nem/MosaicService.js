@@ -10,7 +10,7 @@ var createMosaic = function(mosaicName, fileData) {
     nem_library_1.MosaicLevyType.Absolute,
     new nem_library_1.Address(fileData.owner),
     new nem_library_1.MosaicId('nem', 'xem'),
-    fileData.price * 1000000,
+    Math.round(fileData.price * 1000000),
   );
   // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
   var defaultProperties = new nem_library_1.MosaicProperties(
@@ -28,13 +28,8 @@ var createMosaic = function(mosaicName, fileData) {
         mosaicName.toLowerCase(),
       ),
       'this is a description',
-      fileData.limitedQuantity
-        ? new nem_library_1.MosaicProperties(
-            0,
-            fileData.limitedQuantity,
-            false,
-            false,
-          )
+      fileData.quantity > 0
+        ? new nem_library_1.MosaicProperties(0, fileData.quantity, false, false)
         : defaultProperties,
       mosaicLevy,
     ),

@@ -5,6 +5,7 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 import Button from 'material-ui/Button';
+import Checkbox from 'material-ui/Checkbox';
 import '@firebase/storage';
 import '@firebase/firestore';
 import firebase from '@firebase/app';
@@ -45,6 +46,10 @@ const SnackHighlightStyle = {
   color: '#1FBCD3',
 };
 
+const CheckboxStyle = {
+  marginBottom: 16,
+};
+
 const createMosaicForFile = (mosaicId, fileData, cb) => {
   MosaicService.createMosaic(mosaicId, fileData).subscribe(
     m => {
@@ -72,6 +77,7 @@ class Upload extends React.Component<{}> {
         vertical: null,
         horizontal: null,
       },
+      quantity: 0,
     };
 
     this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -84,6 +90,10 @@ class Upload extends React.Component<{}> {
     this.processFileData = this.processFileData.bind(this);
     this.handleCreateMosaicForFile = this.handleCreateMosaicForFile.bind(this);
     this.setMosaicId = this.setMosaicId.bind(this);
+    this.handleLimitedQuantityCheck = this.handleLimitedQuantityCheck.bind(
+      this,
+    );
+    this.handleQuantityChange = this.handleQuantityChange.bind(this);
   }
 
   handleFileSelect(event) {
@@ -109,6 +119,20 @@ class Upload extends React.Component<{}> {
     });
   }
 
+  handleLimitedQuantityCheck() {
+    this.setState(oldState => {
+      return {
+        limitedQuantity: !oldState.limitedQuantity,
+      };
+    });
+  }
+
+  handleQuantityChange(event) {
+    this.setState({
+      quantity: event.target.value,
+    });
+  }
+
   handleClose = () => {
     this.setState({ open: false });
   };
@@ -122,6 +146,7 @@ class Upload extends React.Component<{}> {
       url: FileService.data.url,
       owner: this.state.uploaderAddress,
       price: this.state.salePrice,
+      quantity: this.state.quantity,
     };
     DatabaseService.saveFileToDatabase(fileData)
       .then(docRef => {
@@ -173,6 +198,16 @@ class Upload extends React.Component<{}> {
                 value={this.state.salePrice}
               />
               <br />
+
+              <TextField
+                style={TextFieldStyle}
+                label="Total Quantity"
+                helperText="The quantity that this item will be limited to.  Leave at 0 if the quantity is not limited"
+                onChange={this.handleQuantityChange}
+                fullWidth
+                type="number"
+                value={this.state.quantity}
+              />
               <br />
 
               <input

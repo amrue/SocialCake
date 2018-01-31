@@ -22,7 +22,7 @@ const createMosaic = (mosaicName: string, fileData) => {
       getPublicAccount(),
       new MosaicId(getNamespaceName(), mosaicName.toLowerCase()),
       "this is a description",
-      fileData.limitedQuantity ? new MosaicProperties(0, fileData.limitedQuantity, false, false) : defaultProperties,
+      fileData.quantity > 0 ? new MosaicProperties(0, fileData.quantity, false, false) : defaultProperties,
       mosaicLevy,
     )
   )
