@@ -16,12 +16,16 @@ const createMosaic = (mosaicName: string, fileData) => {
   // if not limited quantity, then set arbitrary quantity and allow supply to be mutated
   const defaultProperties: MosaicProperties = new MosaicProperties(0, 100000, false, true);
 
+  const mosaicDescription = 'File Name: ' + fileData.name + ' | Last Modified: ' +
+    fileData.lastModified + ' | MD5: ' + fileData.md5 + ' | SHA1: ' +
+    fileData.sha1;
+
   const mosaicDefinitionTransaction = MosaicDefinitionCreationTransaction.create(
     TimeWindow.createWithDeadline(),
     new MosaicDefinition(
       getPublicAccount(),
       new MosaicId(getNamespaceName(), mosaicName.toLowerCase()),
-      "this is a description",
+      mosaicDescription,
       fileData.quantity > 0 ? new MosaicProperties(0, fileData.quantity, false, false) : defaultProperties,
       mosaicLevy,
     )

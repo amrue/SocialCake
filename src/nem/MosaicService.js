@@ -19,6 +19,15 @@ var createMosaic = function(mosaicName, fileData) {
     false,
     true,
   );
+  var mosaicDescription =
+    'File Name: ' +
+    fileData.name +
+    ' | Last Modified: ' +
+    fileData.lastModified +
+    ' | MD5: ' +
+    fileData.md5 +
+    ' | SHA1: ' +
+    fileData.sha1;
   var mosaicDefinitionTransaction = nem_library_1.MosaicDefinitionCreationTransaction.create(
     nem_library_1.TimeWindow.createWithDeadline(),
     new nem_library_1.MosaicDefinition(
@@ -27,7 +36,7 @@ var createMosaic = function(mosaicName, fileData) {
         AccountUtils_1.getNamespaceName(),
         mosaicName.toLowerCase(),
       ),
-      'this is a description',
+      mosaicDescription,
       fileData.quantity > 0
         ? new nem_library_1.MosaicProperties(0, fileData.quantity, false, false)
         : defaultProperties,
